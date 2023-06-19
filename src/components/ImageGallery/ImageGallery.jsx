@@ -21,6 +21,7 @@ export default class ImageGallery extends Component {
         const gallery = await response.json();
         this.setState({ gallery: gallery.hits, status: 'resolved' });
       } catch (error) {
+        this.setState({status: 'rejected' });
       }
     }
   }
