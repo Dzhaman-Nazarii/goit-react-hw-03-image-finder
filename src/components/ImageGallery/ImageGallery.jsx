@@ -19,14 +19,23 @@ export default class ImageGallery extends Component {
     if (prevName !== nextName || prevPage !== nextPage) {
       try {
         this.setState({ status: 'pending' });
+
+        if (prevName !== nextName) {
+          this.setState({ gallery: [] });
+        }
+
         const response = await fetch(
           `https://pixabay.com/api/?q=${nextName}&page=${nextPage}&key=37532394-4be77775868909c78ad8f61fa&image_type=photo&orientation=horizontal&per_page=12`
         );
-        const gallery = await response.json();
+        const galleryData = await response.json();
+        const { hits, totalHits } = galleryData;
+
         this.setState(prevState => ({
-          gallery: [...prevState.gallery, ...gallery.hits],
+          gallery: [...prevState.gallery, ...hits],
           status: 'resolved'
         }));
+
+        this.props.onGalleryData(hits, totalHits);
       } catch (error) {
         this.setState({ status: 'rejected' });
       }
@@ -66,12 +75,7 @@ export default class ImageGallery extends Component {
 }
 
 ImageGallery.propTypes = {
-  images: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      webformatURL: PropTypes.string.isRequired,
-      tags: PropTypes.string.isRequired,
-      largeImageURL: PropTypes.string.isRequired,
-    })
-  )
+  galleryName: PropTypes.string.isRequired,
+  page: PropTypes.number.isRequired,
+  onGalleryData: PropTypes.func.isRequired
 };
