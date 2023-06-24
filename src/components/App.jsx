@@ -28,7 +28,7 @@ export default class App extends Component {
 
   render() {
     const { galleryName, page, totalHits, gallery } = this.state;
-    const hasMore = gallery.length < totalHits; // Перевіряємо, чи є ще зображення для завантаження
+    const hasMore = gallery.length < totalHits && gallery.length > 0;
 
     return (
       <div>
